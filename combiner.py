@@ -153,6 +153,7 @@ class combiner():
         self.sgAttn  = kwargs.get('sgAttn', self.__sgAttn)
         self.sgFreq  = kwargs.get('sgFreq', self.__sgFreq)
         self.dbWrite = kwargs.get('dbWrite',self.__dbWrite)
+        self.testLimit = kwargs.get('testLimit',self.__testLimit)
         # load calibration dictionary
         self.loadCAL()
         # initialize switches to a known state
@@ -250,6 +251,7 @@ class combiner():
                 # write value to the database
                 column_name = "%s_%d" % (test , freq)
                 self.dbWrite( str(val), column_name)
+                self.__testLimit( column_name, str(val) )
     
     # set the frequency of the signal generator, and both power meters
     def setFreq(self, freq):
@@ -304,7 +306,10 @@ class combiner():
     def __dbWrite(self, entry, column_name):
         print "dbWrite( %s, %s )" % (entry, column_name)
         
-
+    def __testLimit(self, testname, value):
+        print "testLimit( %s, %s)" % ( testname, value )
+        
+        
 #########################################################################################
 #
 #   
@@ -363,7 +368,7 @@ def test_printCal():
     
     
 if __name__ == '__main__':
-    test_hw_Cal()
+    test_db2x2()
     
         
 
