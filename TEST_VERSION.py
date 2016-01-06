@@ -7,10 +7,10 @@ import os.path, time
 class Rev():
     SwVer = "0.0.0.dev"
     Date = '$Date: 2015-11-19 11:40:23 -0600 (Thu, 19 Nov 2015) $'
-    Revision = '$Revision:$'
-    Author = '$Author:$'
-    HeadURL = '$HeadURL:$'
-    Id = '$Id:$'
+    Revision = '$Revision: 28574 $'
+    Author = '$Author: mbroeske $'
+    HeadURL = '$HeadURL: https://ubnt-lt.selfip.net/svn/devbox/branches/af-test/all_test/TEST_VERSION.py $'
+    Id = '$Id: TEST_VERSION.py 28574 2015-11-19 17:40:23Z mbroeske $'
      
     def getSwVer(self):
         if self.SwVer.count('dev'):
