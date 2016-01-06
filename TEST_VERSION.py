@@ -6,11 +6,11 @@ import os.path, time
 
 class Rev():
     SwVer = "0.0.0.dev"
-    Date = '$Date: 2015-11-19 11:40:23 -0600 (Thu, 19 Nov 2015) $'
+    Date = '$Date:$'
     Revision = '$Revision:$'
     Author = '$Author:$'
     HeadURL = '$HeadURL:$'
-    Id = '$Id:$'
+    Id = '$Id$'
      
     def getSwVer(self):
         if self.SwVer.count('dev'):
