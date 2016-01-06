@@ -15,4 +15,4 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
-TEST_VERSION    ident
+TEST_VERSION.py    ident
