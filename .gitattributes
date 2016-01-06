@@ -16,3 +16,5 @@
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
 TEST_VERSION.py    ident
+
+

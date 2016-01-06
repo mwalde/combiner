@@ -9,7 +9,7 @@ class Rev():
     Date = '$Date:$'
     Revision = '$Revision:$'
     Author = '$Author:$'
-    HeadURL = '$HeadURL:$'
+    HeadURL = '$HeadURL:$' 
     Id = '$Id$'
      
     def getSwVer(self):
