@@ -154,6 +154,7 @@ class combiner():
         self.sgFreq  = kwargs.get('sgFreq', self.__sgFreq)
         self.dbWrite = kwargs.get('dbWrite',self.__dbWrite)
         self.testLimit = kwargs.get('testLimit',self.__testLimit)
+        self.progress  = kwargs.get('progress',self.__progress)
         # load calibration dictionary
         self.loadCAL()
         # initialize switches to a known state
@@ -244,14 +245,14 @@ class combiner():
             # pause test to debug
 #            junk = raw_input("Testing %s to %s" % (test[1:3], test[3:]))
             for freq in freqlist:
-                print "Testing %s to %s %dMHz" % (test[1:3], test[3:], freq)
+                self.progress( "Testing %s to %s %dMHz" % (test[1:3], test[3:], freq))
                 self.setFreq( freq)
                 sleep(.5)
                 val = self.readPower( test, freq )
                 # write value to the database
                 column_name = "%s_%d" % (test , freq)
                 self.dbWrite( str(val), column_name)
-                self.__testLimit( column_name, str(val) )
+                self.testLimit( column_name, str(val) )
     
     # set the frequency of the signal generator, and both power meters
     def setFreq(self, freq):
@@ -309,7 +310,31 @@ class combiner():
     def __testLimit(self, testname, value):
         print "testLimit( %s, %s)" % ( testname, value )
         
+    def __progress( self, msg=0):
+        print "progress( %s )" % msg
         
+        
+class combiner_runtime(combiner):
+    def __init__(self, cfg=None ):
+        if cfg:
+            swt = hp11713A( host=cfg.get('SWTIP'))
+            
+            pmLoss = nrpz11(cfg.get('PMLOSS'), timeout=10)
+            pmIso  = nrpz11(cfg.get('PMISO' ), timeout=10)
+            sg = SG6000L(port=cfg.get('SGPORT'))
+            pmLoss.setoffset(0)
+            pmIso.setoffset(0)
+            
+            combiner.__init__(pmPwrLoss=pmLoss.avgPower,
+                                pmFreqLoss=pmLoss.setfreq,
+                                pmPwrIso=pmIso.avgPower,
+                                pmFreqIso=pmIso.setfreq,
+                                sgFreq=sg.setFreq,
+                                swtOn=swt.SwitchOn,
+                                swtOff=swt.SwitchOff)
+        else:
+            combiner.__init__(self)
+
 #########################################################################################
 #
 #   
@@ -350,7 +375,8 @@ def test_db2x2():
     from testlib.util.db import Db
     tdata = Db('nxntest.db', 'NXN_DB')
     tdata.de_debug = 1
-    c = combiner(dbWrite=tdata.Entry)
+    c = combiner()
+    c.dbWrite = tdata.Entry
     c.testSequence( testSeq=c.Seq2X2)
     tdata.Close()
     
