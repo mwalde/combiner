@@ -314,26 +314,6 @@ class combiner():
         print "progress( %s )" % msg
         
         
-class combiner_runtime(combiner):
-    def __init__(self, cfg=None ):
-        if cfg:
-            swt = hp11713A( host=cfg.get('SWTIP'))
-            
-            pmLoss = nrpz11(cfg.get('PMLOSS'), timeout=10)
-            pmIso  = nrpz11(cfg.get('PMISO' ), timeout=10)
-            sg = SG6000L(port=cfg.get('SGPORT'))
-            pmLoss.setoffset(0)
-            pmIso.setoffset(0)
-            
-            combiner.__init__(pmPwrLoss=pmLoss.avgPower,
-                                pmFreqLoss=pmLoss.setfreq,
-                                pmPwrIso=pmIso.avgPower,
-                                pmFreqIso=pmIso.setfreq,
-                                sgFreq=sg.setFreq,
-                                swtOn=swt.SwitchOn,
-                                swtOff=swt.SwitchOff)
-        else:
-            combiner.__init__(self)
 
 #########################################################################################
 #
