@@ -5,7 +5,7 @@ from time import sleep
 
 class combiner():
     # current switch setting
-    current = (0,0,0,0,0,0,0,0)
+    current = (0,0,0,0,0,0,0,0,0)
     
     # Frequency/path calibration dictionary
     CAL = {}
@@ -66,23 +66,23 @@ class combiner():
 #
 #   Calibration
 #
-              'LA0J1' : (0,1,1,1,  1,1,1,1,  0),
-              'LB0J1' : (1,1,1,1,  0,1,1,1,  1),
-              'LC0J1' : (1,1,0,1,  1,1,1,1,  0),
-              'LD0J1' : (1,1,1,1,  1,1,0,1,  1),
+              'LA0J1' : (0,1,1,1,  1,1,1,1,  0,0),
+              'LB0J1' : (1,1,1,1,  0,1,1,1,  1,0),
+              'LC0J1' : (1,1,0,1,  1,1,1,1,  0,0),
+              'LD0J1' : (1,1,1,1,  1,1,0,1,  1,0),
 
-              'LA1J2' : (1,0,1,1,  1,1,1,1,  0),
-              'LB1J2' : (1,1,1,1,  1,0,1,1,  1),
-              'LC1J2' : (1,1,1,0,  1,1,1,1,  0),
-              'LD1J2' : (1,1,1,1,  1,1,1,0,  1),
+              'LA1J2' : (1,0,1,1,  1,1,1,1,  0,1),
+              'LB1J2' : (1,1,1,1,  1,0,1,1,  1,1),
+              'LC1J2' : (1,1,1,0,  1,1,1,1,  0,1),
+              'LD1J2' : (1,1,1,1,  1,1,1,0,  1,1),
 
-              'IA0D0' : (0,1,1,1,  1,1,0,1,  1),
-              'IA0B0' : (0,1,1,1,  0,1,1,1,  1),
-              'IC0B0' : (1,1,0,1,  0,1,1,1,  1),
-              'IC1B1' : (1,1,1,0,  1,0,1,1,  1),
+              'IA0D0' : (0,1,1,1,  1,1,0,1,  1,0),
+              'IA0B0' : (0,1,1,1,  0,1,1,1,  1,0),
+              'IC0B0' : (1,1,0,1,  0,1,1,1,  1,0),
+              'IC1B1' : (1,1,1,0,  1,0,1,1,  1,1),
 
-              'IA1B1' : (1,0,1,1,  1,0,1,1,  1),
-              'IA1D1' : (1,0,1,1,  1,1,1,0,  1),
+              'IA1B1' : (1,0,1,1,  1,0,1,1,  1,1),
+              'IA1D1' : (1,0,1,1,  1,1,1,0,  1,1),
 
 
 
@@ -136,7 +136,7 @@ class combiner():
 #              'C1'    : (1,1,1,0,  1,1,1,1,  0),
 #              'D0'    : (1,1,1,1,  1,1,0,1,  1),
 #              'D1'    : (1,1,1,1,  1,1,1,0,  1),
-              'INITL' : (1,1,1,1,  1,1,1,1,  1),
+              'INITL' : (1,1,1,1,  1,1,1,1,  1,1),
               
     }
 
@@ -155,6 +155,7 @@ class combiner():
         self.dbWrite = kwargs.get('dbWrite',self.__dbWrite)
         self.testLimit = kwargs.get('testLimit',self.__testLimit)
         self.progress  = kwargs.get('progress',self.__progress)
+        self.calprompt = kwargs.get('calprompt',self.__calprompt)
         # load calibration dictionary
         self.loadCAL()
         # initialize switches to a known state
@@ -171,7 +172,7 @@ class combiner():
     # path values greater than one are "don't care"
     def SelPath( self, path ):
         new = self.MATRIX[path]
-        for i in range(9):
+        for i in range(10):
             if new[i] == self.current[i]:
                 continue
             if new[i] == 1:
@@ -184,8 +185,8 @@ class combiner():
     # display the current switch settings
     def swtDisplay(self, **kwargs):
         s = kwargs.get('switches', self.current)
-        print "  1   2   3   4   5   6   7   8   9"
-        print "  %d   %d   %d   %d   %d   %d   %d   %d   %d" % ( s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8])
+        print "  1   2   3   4   5   6   7   8   9   0"
+        print "  %d   %d   %d   %d   %d   %d   %d   %d   %d" % ( s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8],s[9])
 
         
     ##### Calibration #####
@@ -195,7 +196,8 @@ class combiner():
         print "CalSequence()"
         for test in self.SeqCal:
             self.SelPath(test)
-            junk = raw_input("Connect %s to %s   Ready?" % ( test[3:],test[1:3]))
+            self.calprompt("Connect %s to %s   Ready?" % ( test[3:],test[1:3]))
+#            junk = raw_input("Connect %s to %s   Ready?" % ( test[3:],test[1:3]))
             for freq in freqlist:
                 self.setFreq( freq) 
                 print freq, ' ',
@@ -313,6 +315,10 @@ class combiner():
     def __progress( self, msg=0):
         print "progress( %s )" % msg
         
+    def __calprompt( self, msg):
+        junk = raw_input(msg)
+
+        
         
 
 #########################################################################################
@@ -374,7 +380,7 @@ def test_printCal():
     
     
 if __name__ == '__main__':
-    test_db2x2()
+    test_Cal()
     
         
 
